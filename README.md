@@ -1,7 +1,7 @@
 # ✨ Muqeet Ahmed Solangi | Full-Stack Developer ✨
 
 <div align="center">
-  <img src="https://repository-images.githubusercontent.com/588181932/e36ec678-7984-4cdd-8e4c-a3932772ff8e" alt="Developer Banner" width="100%">
+  <img src="https://user-images.githubusercontent.com/74038190/213910845-af37a709-8995-40d6-be59-724526e3c3d7.gif" alt="Developer Banner" width="100%">
   
   ![Profile Views](https://komarev.com/ghpvc/?username=Muqeetahmedsolangi&style=flat-square&color=blue)
   [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat-square&logo=linkedin)](https://linkedin.com/in/muqeetahmed)
@@ -32,6 +32,27 @@ const muqeetAhmed = {
   architecture: ["Microservices", "Serverless", "REST API", "GraphQL", "WebSockets"],
   currentlyLearning: ["Rust", "Kubernetes", "Web3"]
 };
+
+// Example of my code quality standards
+function createRESTfulAPI() {
+  const app = express();
+  app.use(cors());
+  app.use(express.json());
+  
+  // Implement middleware
+  app.use(authMiddleware);
+  app.use(errorHandler);
+  
+  // Connect to database
+  connectToDB(process.env.DB_URI);
+  
+  // Register routes
+  app.use('/api/users', userRoutes);
+  app.use('/api/products', productRoutes);
+  app.use('/api/analytics', analyticsRoutes);
+  
+  return app;
+}
 ```
 
 ## 📊 GitHub Stats ⭐
@@ -82,29 +103,293 @@ const muqeetAhmed = {
 Here are some of my highlighted projects that demonstrate my technical expertise:
 
 ### 🚀 E-Commerce Platform
-<img src="https://user-images.githubusercontent.com/74038190/238200426-29fd6286-4e7b-4d6c-818f-c4765d5e39a9.gif" width="100%" alt="E-commerce Dashboard">
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%" alt="E-commerce Dashboard">
 
 A full-stack e-commerce solution with real-time inventory management, payment processing, and analytics dashboard.
 - **Frontend**: Next.js, Redux Toolkit, Tailwind CSS
 - **Backend**: Node.js, Express, MongoDB
 - **Features**: Auth, Cart, Payment Integration, Admin Dashboard, Analytics
 
-tures**: Real-time data visualization, portfolio tracking, predictive analytics
+```jsx
+// Sample Redux slice for cart management
+import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = {
+  items: [],
+  totalQuantity: 0,
+  totalAmount: 0,
+  isLoading: false,
+  error: null,
+};
+
+const cartSlice = createSlice({
+  name: 'cart',
+  initialState,
+  reducers: {
+    addToCart(state, action) {
+      const newItem = action.payload;
+      const existingItem = state.items.find(item => item.id === newItem.id);
+      
+      state.totalQuantity++;
+      state.totalAmount += newItem.price;
+      
+      if (!existingItem) {
+        state.items.push({
+          id: newItem.id,
+          price: newItem.price,
+          quantity: 1,
+          totalPrice: newItem.price,
+          name: newItem.title,
+          image: newItem.image
+        });
+      } else {
+        existingItem.quantity++;
+        existingItem.totalPrice += newItem.price;
+      }
+    },
+    removeFromCart(state, action) {
+      const id = action.payload;
+      const existingItem = state.items.find(item => item.id === id);
+      
+      state.totalQuantity--;
+      state.totalAmount -= existingItem.price;
+      
+      if (existingItem.quantity === 1) {
+        state.items = state.items.filter(item => item.id !== id);
+      } else {
+        existingItem.quantity--;
+        existingItem.totalPrice -= existingItem.price;
+      }
+    }
+  }
+});
+
+export const cartActions = cartSlice.actions;
+export default cartSlice.reducer;
+```
+
+### 📊 Financial Dashboard
+<img src="https://user-images.githubusercontent.com/74038190/238200620-398b19b1-9aae-4c1f-8bc0-d172a2c08d68.gif" width="100%" alt="Financial Dashboard">
+
+An interactive dashboard for visualizing stock market data and portfolio performance.
+- **Frontend**: React, D3.js, Zustand
+- **Backend**: NestJS, PostgreSQL, Prisma
+- **Features**: Real-time data visualization, portfolio tracking, predictive analytics
+
+```typescript
+// Sample code snippet from the Financial Dashboard
+import React, { useEffect, useState } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+
+const StockChart = ({ symbol }) => {
+  const [stockData, setStockData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+    const fetchStockData = async () => {
+      try {
+        const response = await fetch(`/api/stocks/${symbol}`);
+        const data = await response.json();
+        
+        // Process and normalize data
+        const processedData = data.map(item => ({
+          date: new Date(item.date).toLocaleDateString(),
+          price: parseFloat(item.closePrice),
+          volume: item.volume,
+          change: parseFloat(item.percentChange)
+        }));
+        
+        setStockData(processedData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching stock data:', error);
+        setIsLoading(false);
+      }
+    };
+    
+    fetchStockData();
+  }, [symbol]);
+  
+  if (isLoading) return <div>Loading stock data...</div>;
+  
+  return (
+    <div className="stock-chart-container">
+      <h2>{symbol} Stock Performance</h2>
+      <ResponsiveContainer width="100%" height={400}>
+        <LineChart data={stockData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="price" stroke="#8884d8" dot={false} />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+export default StockChart;
+```
 
 ### 🎮 Multiplayer Game Platform
+<img src="https://user-images.githubusercontent.com/74038190/235224431-e8c8c12e-6826-47f1-89fb-2ddad83b3abf.gif" width="100%" alt="Gaming Platform">
+
 A real-time multiplayer gaming platform with matchmaking and leaderboards.
 - **Tech**: Vue.js, Socket.io, Node.js, MongoDB
 - **Features**: Real-time gameplay, user profiles, matchmaking algorithm
 
+```javascript
+// Matchmaking system implementation
+class MatchmakingSystem {
+  constructor() {
+    this.waitingPlayers = [];
+    this.activeMatches = new Map();
+    this.skillThreshold = 200; // Skill difference threshold
+  }
+
+  // Add player to matchmaking queue
+  addPlayerToQueue(player) {
+    console.log(`Player ${player.username} (skill: ${player.skillRating}) joined queue`);
+    this.waitingPlayers.push(player);
+    this.findMatch(player);
+    return { success: true, message: 'Added to matchmaking queue' };
+  }
+
+  // Find suitable match for player
+  findMatch(newPlayer) {
+    const potentialOpponents = this.waitingPlayers.filter(player => 
+      player.id !== newPlayer.id && 
+      Math.abs(player.skillRating - newPlayer.skillRating) <= this.skillThreshold
+    );
+
+    if (potentialOpponents.length > 0) {
+      // Sort by closest skill match
+      potentialOpponents.sort((a, b) => 
+        Math.abs(a.skillRating - newPlayer.skillRating) - 
+        Math.abs(b.skillRating - newPlayer.skillRating)
+      );
+      
+      const opponent = potentialOpponents[0];
+      this.createMatch(newPlayer, opponent);
+    }
+  }
+
+  // Create a new match between two players
+  createMatch(player1, player2) {
+    const matchId = generateUniqueId();
+    const newMatch = {
+      matchId,
+      players: [player1, player2],
+      startTime: new Date(),
+      status: 'starting'
+    };
+    
+    // Remove players from waiting queue
+    this.waitingPlayers = this.waitingPlayers.filter(
+      player => player.id !== player1.id && player.id !== player2.id
+    );
+    
+    // Store active match
+    this.activeMatches.set(matchId, newMatch);
+    
+    // Notify players
+    notifyMatchCreated(player1, player2, matchId);
+    
+    console.log(`Match created: ${player1.username} vs ${player2.username}`);
+    return matchId;
+  }
+}
+```
+
 ## 📊 My Coding Activity ⭐
 
 <div align="center">
+  <img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="400" alt="Coding Activity">
   
   ![GitHub Streak](https://github-readme-streak-stats.herokuapp.com/?user=Muqeetahmedsolangi&theme=radical&border=30A3DC)
   
 </div>
 
+```typescript
+// Recent contribution - A custom React hook for data fetching with caching
+import { useState, useEffect } from 'react';
+
+interface CacheItem<T> {
+  data: T;
+  timestamp: number;
+}
+
+interface UseDataFetchResult<T> {
+  data: T | null;
+  isLoading: boolean;
+  error: Error | null;
+  refetch: () => Promise<void>;
+}
+
+// Cache duration in milliseconds (default: 5 minutes)
+const DEFAULT_CACHE_DURATION = 5 * 60 * 1000;
+
+const cache = new Map<string, CacheItem<any>>();
+
+export function useDataFetch<T>(
+  url: string, 
+  options?: RequestInit,
+  cacheDuration: number = DEFAULT_CACHE_DURATION
+): UseDataFetchResult<T> {
+  const [data, setData] = useState<T | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const fetchData = async (): Promise<void> => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // Check if we have cached data that's still valid
+      const cachedItem = cache.get(url);
+      const now = Date.now();
+      
+      if (cachedItem && (now - cachedItem.timestamp < cacheDuration)) {
+        setData(cachedItem.data);
+        setIsLoading(false);
+        return;
+      }
+      
+      // Fetch fresh data
+      const response = await fetch(url, options);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      
+      // Update cache
+      cache.set(url, {
+        data: result,
+        timestamp: now
+      });
+      
+      setData(result);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error(String(err)));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [url]);
+
+  return { data, isLoading, error, refetch: fetchData };
+}
+```
+
 ## 🌱 Currently Learning ⭐
+
+<img align="right" src="https://user-images.githubusercontent.com/74038190/229223263-cf2e4b07-2615-4f87-9c38-e37600f8381a.gif" width="400" alt="Learning">
 
 I believe in continuous learning and currently expanding my knowledge in:
 - Advanced microservices architecture
@@ -134,6 +419,7 @@ When I'm not coding, you'll find me exploring new hiking trails, experimenting w
 ---
 
 <div align="center">
+  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="700">
   
   ⭐ 💬 <i>"The only way to do great work is to love what you do."</i> - Steve Jobs ⭐
   
